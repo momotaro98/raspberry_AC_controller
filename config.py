@@ -1,6 +1,6 @@
 class Config:
     CONTROLLER_NAME = ''
-    SIGNALS = []
+    SIGNALS = {'stop': '', 'warm': '', 'cool': ''}
     
     @staticmethod
     def init_app(app):
