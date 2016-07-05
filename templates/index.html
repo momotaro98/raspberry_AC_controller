@@ -4,18 +4,37 @@
     <h1>My AC Controller</h1>
     <h2 style="font-size: 80px;">{{ state }}</h2>
 </div>
-<div id="Button_set">
-    <div class="Button" id="homeButton">
-        <a href="{{ url_for('index') }}">HOME</a>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <a href="{{ url_for('index') }}">
+                <div class="Button" id="coolButton">冷房</div>
+            </a>
+        </div>
+        <div class="col-xs-6">
+            <a href="{{ url_for('do_stopping') }}">
+                <div class="Button" id="warmButton">暖房</div>
+            </a>
+        </div>
     </div>
-    <div class="Button" id="stopButton">
-        <a href="{{ url_for('do_stopping') }}">STOP</a>
+    <div class="row">
+        <div class="col-xs-6">
+            <a href="{{ url_for('index') }}">
+                <div class="Button" id="dryButton">除湿</div>
+            </a>
+        </div>
+        <div class="col-xs-6">
+            <a href="{{ url_for('do_stopping') }}">
+                <div class="Button" id="autoButton">自動</div>
+            </a>
+        </div>
     </div>
-    <div class="Button" id="warmButton">
-        <a href="{{ url_for('do_warming') }}">WARM</a>
-    </div>
-    <div class="Button" id="coolButton">
-        <a href="{{ url_for('do_cooling') }}">COOL</a>
+</div>
+<div class="container">
+    <div id="temperature">
+        <div class="temperatureBox">▲</div>
+        <div class="temperatureBox">温度</div>
+        <div class="temperatureBox">▼</div>
     </div>
 </div>
 {% endblock %}

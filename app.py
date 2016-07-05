@@ -1,9 +1,17 @@
 import os
-from flask import Flask, render_template, redirect, url_for
 
+from flask import Flask, render_template, redirect, url_for
+from flask_bootstrap import Bootstrap
 from config import Config
 
-app = Flask(__name__)
+
+def create_app():
+    app = Flask(__name__)
+    Bootstrap(app)
+
+    return app
+
+app = create_app()
 
 @app.route('/')
 def index():
@@ -29,4 +37,4 @@ def do_cooling():
     return render_template('index.html', state=state)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port=5050)

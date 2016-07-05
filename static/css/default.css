@@ -1,38 +1,57 @@
-html {
-    height: 100%;
-}
-body {
-    height: 100%;
-    font-size: 16px;
-    font-family: Verdana, Arial;
+a:hover {
+    text-decoration: none;
 }
 #text {
     clear: right;
     display: block;
     margin: 0 auto;
 }
-#Button_set {
-    clear: right;
-    display: block;
-    margin: 0 auto;
-}
-#homeButton, #stopButton, #warmButton, #coolButton{
-        margin: auto auto;
-        width: 50%;
+.Button {
+        margin: 0px 0px 20px 0px;
         border-radius: 20px;
-        box-shadow: 0 6px 0 #e91b0c;
-        background: #f44336;
-        color: #fff;
         cursor: pointer;
         padding: 2px;
         text-align: center;
+        font-size: 24px;
         font-weight: bold;
-        font-size: 100px;
+
+        color: #000;
+        background: #c0c0c0;
+        box-shadow: 0 6px 0 #808080;
 }
-    #homeButton:hover, #stopButton:hover, #warmButton:hover, #coolButton:hover{
-        opacity: 0.8;
-    }
-    #homeButton.pushed, #stopButton.pushed, #warmButton.pushed, #coolButton.pushed, {
-        margin-top: 32px;
-        box-shadow: 0 2px 0 #e91b0c;
-    }
+.Button:hover{
+    opacity: 0.8;
+}
+.Button.pushed{
+    margin-top: 32px;
+    box-shadow: 0 2px 0 #e91b0c;
+}
+#coolButton{
+    color: #fff;
+    background: #0000FF;
+    box-shadow: 0 6px 0 #000080;
+}
+#warmButton{
+    color: #fff;
+    background: #f44336;
+    box-shadow: 0 6px 0 #e91b0c;
+}
+#dryButton{
+    color: #fff;
+    background: #00ff00;
+    box-shadow: 0 6px 0 #00cc66;
+}
+#autoButton{
+    color: #fff;
+    background: #c0c0c0;
+    box-shadow: 0 6px 0 #808080;
+}
+#temperature{
+    margin: 20px 0px 20px 0px;
+    text-align: center;
+}
+.temperatureBox{
+    font-size: 24px;
+    padding: 2px;
+    border: medium solid #000;
+}
