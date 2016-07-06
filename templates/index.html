@@ -1,11 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
 <div id="text">
-    <h1>My AC Controller</h1>
-    <h2 style="font-size: 80px;">{{ state }}</h2>
+    <h2>WEBリモコン</h2>
 </div>
 <div class="container">
-    <div class="row">
+    <div id="stateModes" class="row">
+        <div class="col-xs-3">
+            <div id="operationMode" class="state">
+                運転 {{ state }}
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div id="temperatureMode" class="state">
+               設定温度 24℃
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div id="windMode" class="state">
+                風速 強
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div id="operationButtons" class="row">
         <div class="col-xs-6">
             <a href="{{ url_for('index') }}">
                 <div class="Button" id="coolButton">冷房</div>
@@ -35,6 +53,13 @@
         <div class="temperatureBox">▲</div>
         <div class="temperatureBox">温度</div>
         <div class="temperatureBox">▼</div>
+    </div>
+</div>
+<div class="container">
+    <div id="stop">
+        <a href="{{ url_for('do_stopping') }}">
+            <div class="Button" id="stopButton">停止</div>
+        </a>
     </div>
 </div>
 {% endblock %}

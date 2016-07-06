@@ -1,6 +1,8 @@
 {% extends "bootstrap/base.html" %}
 
+
 {% block title %}エアコン操作画面{% endblock %}
+
 
 {% block head %}
 {{ super() }}
@@ -8,5 +10,28 @@
 <link type="text/css" rel="stylesheet" href="/static/css/default.css"/>
 <link rel="shortcut icon" href="/static/image/favicon.ico">
 {% endblock %}
+
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ url_for('index') }}">リモコン画面</a></li>
+                <li><a href="{{ url_for('index') }}">タイマー予約</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 
 {% block content %}{% endblock %}
