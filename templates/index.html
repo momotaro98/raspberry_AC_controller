@@ -7,7 +7,7 @@
     <div id="stateModes" class="row">
         <div class="col-xs-3">
             <div id="operationMode" class="state">
-                運転 {{ state }}
+                運転 {{ state.operating }}
             </div>
         </div>
         <div class="col-xs-6">
@@ -30,7 +30,7 @@
             </a>
         </div>
         <div class="col-xs-6">
-            <a href="{{ url_for('do_stopping') }}">
+            <a href="{{ url_for('index') }}">
                 <div class="Button" id="warmButton">暖房</div>
             </a>
         </div>
@@ -42,7 +42,7 @@
             </a>
         </div>
         <div class="col-xs-6">
-            <a href="{{ url_for('do_stopping') }}">
+            <a href="{{ url_for('index') }}">
                 <div class="Button" id="autoButton">自動</div>
             </a>
         </div>
@@ -57,7 +57,7 @@
 </div>
 <div class="container">
     <div id="stop">
-        <a href="{{ url_for('do_stopping') }}">
+        <a href="{{ url_for('index') }}">
             <div class="Button" id="stopButton">停止</div>
         </a>
     </div>
