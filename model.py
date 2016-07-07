@@ -15,7 +15,7 @@ class ACState:
 
             self._onoff = last_row_list[1]
             self._operating = last_row_list[2]
-            self._temperature = last_row_list[3]
+            self._temperature = int(last_row_list[3])
             self._wind = last_row_list[4]
 
     def __repr__(self):
@@ -30,7 +30,7 @@ class ACState:
 
     @onoff.setter
     def onoff(self, x):
-        self._operating = x
+        self._onoff = x
         # ファイル書き込み
         self._addLineToFile()
 
@@ -41,6 +41,9 @@ class ACState:
     @operating.setter
     def operating(self, x):
         self._operating = x
+
+        if self.onoff == "off":
+            self.onoff = "on"
         # ファイル書き込み
         self._addLineToFile()
 
@@ -50,7 +53,7 @@ class ACState:
 
     @temperature.setter
     def temperature(self, x):
-        self._operating = x
+        self._temperature = x
         # ファイル書き込み
         self._addLineToFile()
 

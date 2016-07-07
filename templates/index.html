@@ -6,43 +6,43 @@
 <div class="container">
     <div id="stateModes" class="row">
         <div class="col-xs-3">
-            <div id="operationMode" class="state">
+            <div id="operatingMode" class="state">
                 運転 {{ state.operating }}
             </div>
         </div>
         <div class="col-xs-6">
             <div id="temperatureMode" class="state">
-               設定温度 24℃
+                設定温度 {{ state.temperature }}℃
             </div>
         </div>
         <div class="col-xs-3">
             <div id="windMode" class="state">
-                風速 強
+                風速 {{ state.wind }}
             </div>
         </div>
     </div>
 </div>
 <div class="container">
-    <div id="operationButtons" class="row">
+    <div class="row">
         <div class="col-xs-6">
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('modeOperating', operatingMode='cool') }}">
                 <div class="Button" id="coolButton">冷房</div>
             </a>
         </div>
         <div class="col-xs-6">
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('modeOperating', operatingMode='warm') }}">
                 <div class="Button" id="warmButton">暖房</div>
             </a>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-6">
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('modeOperating', operatingMode='dry') }}">
                 <div class="Button" id="dryButton">除湿</div>
             </a>
         </div>
         <div class="col-xs-6">
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('modeOperating', operatingMode='auto') }}">
                 <div class="Button" id="autoButton">自動</div>
             </a>
         </div>
@@ -50,14 +50,44 @@
 </div>
 <div class="container">
     <div id="temperature">
-        <div class="temperatureBox">▲</div>
+        <a href="{{ url_for('modeTemperature', temperatureMode='up') }}">
+            <div class="temperatureBox" id="upTemperature">▲</div>
+        </a>
         <div class="temperatureBox">温度</div>
-        <div class="temperatureBox">▼</div>
+        <a href="{{ url_for('modeTemperature', temperatureMode='down') }}">
+            <div class="temperatureBox" id="downTemperature">▼</div>
+        </a>
+    </div>
+</div>
+<div class="container">
+    <div id="windButtons" class="row">
+        <div class="col-xs-6">
+            <a href="{{ url_for('modeWind', windMode='strong') }}">
+                <div class="Button windButton">強風</div>
+            </a>
+        </div>
+        <div class="col-xs-6">
+            <a href="{{ url_for('modeWind', windMode='weak') }}">
+                <div class="Button windButton">弱風</div>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <a href="{{ url_for('modeWind', windMode='breeze') }}">
+                <div class="Button windButton">微風</div>
+            </a>
+        </div>
+        <div class="col-xs-6">
+            <a href="{{ url_for('modeWind', windMode='auto') }}">
+                <div class="Button windButton">自動</div>
+            </a>
+        </div>
     </div>
 </div>
 <div class="container">
     <div id="stop">
-        <a href="{{ url_for('index') }}">
+        <a href="{{ url_for('turnOff') }}">
             <div class="Button" id="stopButton">停止</div>
         </a>
     </div>

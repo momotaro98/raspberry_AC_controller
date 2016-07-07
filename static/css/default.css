@@ -17,7 +17,7 @@ a:hover {
 }
 .state{
 }
-#operationMode{
+#operatingMode{
 }
 #temperatureMode{
 }
@@ -74,4 +74,18 @@ a:hover {
     font-weight: bold;
     padding: 2px;
     border: medium solid #000;
+}
+.windButton {
+    padding: 1px;
+    font-size: 16px;
+    font-weight: bold;
+
+    color: #fff;
+    background: #c0c0c0;
+    box-shadow: 0 6px 0 #808080;
+}
+#stopButton {
+    color: #000;
+    background: #c0c0c0;
+    box-shadow: 0 6px 0 #e91b0c;
 }

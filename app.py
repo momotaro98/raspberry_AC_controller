@@ -22,75 +22,75 @@ def index():
 
 @app.route('/on')
 def turnOn():
-    '''
-    # 読み込み
-    # 受け取るデータ型は
-    state = state.read()
+    # ACStateインスタンス読み込み
+    state = ACState()
 
-    # 赤外線送信
-    os.system('irsend SEND_ONCE {0} {1}'.format(Config.CONTROLLER_NAME, Config.SIGNALS['stop']))
+    # ステート変更 ログファイル追加
+    state.onoff = "on"
 
-    # 状態ファイル書き換え or 追加
-    state.write()
+    # stateを元に赤外線送信
+    # TODO
+    # state.sendSignalToAC()
 
-    '''
-    state = ACState() # ステータスデータを読み込む
     return render_template('index.html', state=state)
 
 @app.route('/off')
 def turnOff():
-    '''
-    # 赤外線送信
-    os.system('irsend SEND_ONCE {0} {1}'.format(Config.CONTROLLER_NAME, Config.SIGNALS['stop']))
+    # ACStateインスタンス読み込み
+    state = ACState()
 
-    # 状態ファイル書き換え or 追加
-    state.write()
-    '''
-    state = ACState() # ステータスデータを読み込む
+    # ステート変更 ログファイル追加
+    state.onoff = "off"
+
+    # stateを元に赤外線送信
+    # TODO
+    # state.sendSignalToAC()
+
     return render_template('index.html', state=state)
 
 @app.route('/operating/<operatingMode>')
-def modeOperating():
-    '''
-    # 状態ファイル書き換え or 追加
-    state.write()
-    # 読み込み
-    state = state.read()
+def modeOperating(operatingMode):
+    # ACStateインスタンス読み込み
+    state = ACState()
 
-    # 赤外線送信
-    os.system('irsend SEND_ONCE {0} {1}'.format(Config.CONTROLLER_NAME, Config.SIGNALS['stop']))
+    # ステート変更 ログファイル追加
+    state.operating = operatingMode
 
-    '''
-    state = ACState() # ステータスデータを読み込む
+    # stateを元に赤外線送信
+    # TODO
+    # state.sendSignalToAC()
+
     return render_template('index.html', state=state)
 
 @app.route('/temperature/<temperatureMode>')
-def modeTemperature():
-    '''
-    # 状態ファイル書き換え or 追加
-    state.write()
-    # 読み込み
-    state = state.read()
+def modeTemperature(temperatureMode):
+    # ACStateインスタンス読み込み
+    state = ACState()
 
-    # 赤外線送信
-    os.system('irsend SEND_ONCE {0} {1}'.format(Config.CONTROLLER_NAME, Config.SIGNALS['stop']))
+    # ステート変更 ログファイル追加
+    if temperatureMode == "up":
+        state.temperature += 1
+    if temperatureMode == "down":
+        state.temperature -= 1
 
-    '''
-    state = ACState() # ステータスデータを読み込む
+    # stateを元に赤外線送信
+    # TODO
+    # state.sendSignalToAC()
+
     return render_template('index.html', state=state)
 
 @app.route('/wind/<windMode>')
-def modeWind():
-    '''
-    # 状態ファイル書き換え or 追加
-    state.write()
-    # 読み込み
-    state = state.read()
+def modeWind(windMode):
+    # ACStateインスタンス読み込み
+    state = ACState()
 
-    # 赤外線送信
-    os.system('irsend SEND_ONCE {0} {1}'.format(Config.CONTROLLER_NAME, Config.SIGNALS['stop']))
-    '''
-    state = ACState() # ステータスデータを読み込む
+    # ステート変更 ログファイル追加
+    state.wind = windMode
+
+    # stateを元に赤外線送信
+    # TODO
+    # state.sendSignalToAC()
+
     return render_template('index.html', state=state)
 
 
