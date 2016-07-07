@@ -5,15 +5,16 @@ from datetime import datetime
 from config import Config
 
 class ACState:
-    def __init__(self):
+    def __init__(self, context):
         """
         CSVファイルから最後の行のデータを読み込む
         """
-        with open("acstate.csv", 'r') as f:
+        with open(context["csvFilePath"], 'r') as f:
             reader = csv.reader(f)
             for row in reader:
                 last_row_list = row
 
+            self._fileName = context["csvFilePath"]
             self._onoff = last_row_list[1]
             self._operating = last_row_list[2]
             self._temperature = int(last_row_list[3])
@@ -88,7 +89,7 @@ class ACState:
                         self._operating,
                         self._temperature,
                         self._wind]
-        with open("acstate.csv", 'a') as f:
+        with open(self._fileName, 'a') as f:
             writer = csv.writer(f, lineterminator='\n')
             writer.writerow(data_list)
 

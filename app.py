@@ -17,13 +17,13 @@ app = create_app()
 
 @app.route('/')
 def index():
-    state = ACState() # ステータスデータを読み込む
+    state = ACState(Config.context) # ステータスデータを読み込む
     return render_template('index.html', state=state)
 
 @app.route('/on')
 def turnOn():
     # ACStateインスタンス読み込み
-    state = ACState()
+    state = ACState(Config.context)
 
     # ステート変更 ログファイル追加
     state.onoff = "on"
@@ -36,7 +36,7 @@ def turnOn():
 @app.route('/off')
 def turnOff():
     # ACStateインスタンス読み込み
-    state = ACState()
+    state = ACState(Config.context)
 
     # ステート変更 ログファイル追加
     state.onoff = "off"
@@ -49,7 +49,7 @@ def turnOff():
 @app.route('/operating/<operatingMode>')
 def modeOperating(operatingMode):
     # ACStateインスタンス読み込み
-    state = ACState()
+    state = ACState(Config.context)
 
     # ステート変更 ログファイル追加
     state.operating = operatingMode
@@ -62,7 +62,7 @@ def modeOperating(operatingMode):
 @app.route('/temperature/<temperatureMode>')
 def modeTemperature(temperatureMode):
     # ACStateインスタンス読み込み
-    state = ACState()
+    state = ACState(Config.context)
 
     # ステート変更 ログファイル追加
     if temperatureMode == "up":
@@ -78,7 +78,7 @@ def modeTemperature(temperatureMode):
 @app.route('/wind/<windMode>')
 def modeWind(windMode):
     # ACStateインスタンス読み込み
-    state = ACState()
+    state = ACState(Config.context)
 
     # ステート変更 ログファイル追加
     state.wind = windMode
