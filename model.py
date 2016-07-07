@@ -1,3 +1,4 @@
+import os
 import csv
 from datetime import datetime
 
@@ -91,14 +92,25 @@ class ACState:
             writer = csv.writer(f, lineterminator='\n')
             writer.writerow(data_list)
 
+    def sendSignalToAC(self):
+        InfraredSignal.sendSignal(onoff=self.onoff,
+                                  operating=self.operating,
+                                  temperature=self.temperature,
+                                  wind=self.wind)
 
 class InfraredSignal:
-    def __init__(self):
-        pass
+    controller = Config.CONTROLLER_NAME
 
-    def sendSignal(self):
+    @classmethod
+    def sendSignal(cls, **states):
         """
-        赤外線を送信する
-        os.system('irsend SEND_ONCE {0} {1}'.format(Config.CONTROLLER_NAME, Config.SIGNALS['stop']))
+        # statesから1つの信号NAMEを生成
+        ex. signal <- 'on-cool-temperature-wind'
         """
-        pass
+        signal = "{0}-{1}-{2}-{3}".format(states["onoff"],
+                           states["operating"],
+                           states["temperature"],
+                           states["wind"])
+
+        # 赤外線を送信する
+        os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller, signal))

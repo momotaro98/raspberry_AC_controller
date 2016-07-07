@@ -29,8 +29,7 @@ def turnOn():
     state.onoff = "on"
 
     # stateを元に赤外線送信
-    # TODO
-    # state.sendSignalToAC()
+    state.sendSignalToAC()
 
     return render_template('index.html', state=state)
 
@@ -43,8 +42,7 @@ def turnOff():
     state.onoff = "off"
 
     # stateを元に赤外線送信
-    # TODO
-    # state.sendSignalToAC()
+    state.sendSignalToAC()
 
     return render_template('index.html', state=state)
 
@@ -57,8 +55,7 @@ def modeOperating(operatingMode):
     state.operating = operatingMode
 
     # stateを元に赤外線送信
-    # TODO
-    # state.sendSignalToAC()
+    state.sendSignalToAC()
 
     return render_template('index.html', state=state)
 
@@ -74,8 +71,7 @@ def modeTemperature(temperatureMode):
         state.temperature -= 1
 
     # stateを元に赤外線送信
-    # TODO
-    # state.sendSignalToAC()
+    state.sendSignalToAC()
 
     return render_template('index.html', state=state)
 
@@ -88,8 +84,7 @@ def modeWind(windMode):
     state.wind = windMode
 
     # stateを元に赤外線送信
-    # TODO
-    # state.sendSignalToAC()
+    state.sendSignalToAC()
 
     return render_template('index.html', state=state)
 
