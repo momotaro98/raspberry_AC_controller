@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+</div>
+{% endfor %}
+
 <div id="text">
     <h2>WEBリモコン</h2>
 </div>

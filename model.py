@@ -94,7 +94,7 @@ class ACState:
             writer.writerow(data_list)
 
     def sendSignalToAC(self):
-        InfraredSignal.sendSignal(onoff=self.onoff,
+        return InfraredSignal.sendSignal(onoff=self.onoff,
                                   operating=self.operating,
                                   temperature=self.temperature,
                                   wind=self.wind)
@@ -104,14 +104,20 @@ class InfraredSignal:
 
     @classmethod
     def sendSignal(cls, **states):
-        """
         # statesから1つの信号NAMEを生成
-        ex. signal <- 'on-cool-temperature-wind'
-        """
-        signal = "{0}-{1}-{2}-{3}".format(states["onoff"],
-                           states["operating"],
-                           states["temperature"],
-                           states["wind"])
+        if states["onoff"] == "off":
+            signal = "off"
+        elif states["onoff"] == "on":
+            signal = "{0}{1}{2}".format(states["operating"],
+                                        states["temperature"],
+                                        states["wind"])
+        else:
+            return
 
         # 赤外線を送信する
-        os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller, signal))
+        if int(os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller, signal))):
+        # 異常終了したとき
+            return "error"
+
+        # 正常に送信できたとき
+        return

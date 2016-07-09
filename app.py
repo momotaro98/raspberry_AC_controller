@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 
 from config import Config
@@ -9,6 +9,7 @@ from model import ACState
 
 def create_app():
     app = Flask(__name__)
+    app.secret_key = os.environ.get('SECRET_KEY') or 'hard to guess string'
     Bootstrap(app)
 
     return app
@@ -29,7 +30,8 @@ def turnOn():
     state.onoff = "on"
 
     # stateを元に赤外線送信
-    state.sendSignalToAC()
+    if state.sendSignalToAC():
+        flash('信号を送信できませんでした')
 
     return render_template('index.html', state=state)
 
@@ -42,7 +44,8 @@ def turnOff():
     state.onoff = "off"
 
     # stateを元に赤外線送信
-    state.sendSignalToAC()
+    if state.sendSignalToAC():
+        flash('信号を送信できませんでした')
 
     return render_template('index.html', state=state)
 
@@ -55,7 +58,8 @@ def modeOperating(operatingMode):
     state.operating = operatingMode
 
     # stateを元に赤外線送信
-    state.sendSignalToAC()
+    if state.sendSignalToAC():
+        flash('信号を送信できませんでした')
 
     return render_template('index.html', state=state)
 
@@ -71,7 +75,8 @@ def modeTemperature(temperatureMode):
         state.temperature -= 1
 
     # stateを元に赤外線送信
-    state.sendSignalToAC()
+    if state.sendSignalToAC():
+        flash('信号を送信できませんでした')
 
     return render_template('index.html', state=state)
 
@@ -84,7 +89,8 @@ def modeWind(windMode):
     state.wind = windMode
 
     # stateを元に赤外線送信
-    state.sendSignalToAC()
+    if state.sendSignalToAC():
+        flash('信号を送信できませんでした')
 
     return render_template('index.html', state=state)
 
