@@ -69,9 +69,14 @@ def modeTemperature(temperatureMode):
     state = ACState(Config.context)
 
     # ステート変更 ログファイル追加
-    if temperatureMode == "up":
+    if temperatureMode == "up" and state.temperature >= 30:
+        flash('最大設定温度です')
+    elif temperatureMode == "up":
         state.temperature += 1
-    if temperatureMode == "down":
+
+    if temperatureMode == "down" and state.temperature <= 18:
+        flash('最低設定温度です')
+    elif temperatureMode == "down":
         state.temperature -= 1
 
     # stateを元に赤外線送信

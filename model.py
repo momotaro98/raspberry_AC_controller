@@ -55,7 +55,10 @@ class ACState:
 
     @temperature.setter
     def temperature(self, x):
-        self._temperature = x
+        if 18 <= x <= 30: # 設定温度制限
+            self._temperature = x
+        else:
+            return
 
         if self.onoff == "off":
             self._onoff = "on"
