@@ -45,7 +45,7 @@ class ACState:
         self._operating = x
 
         if self.onoff == "off":
-            self.onoff = "on"
+            self._onoff = "on"
         # ファイル書き込み
         self._addLineToFile()
 
@@ -56,6 +56,9 @@ class ACState:
     @temperature.setter
     def temperature(self, x):
         self._temperature = x
+
+        if self.onoff == "off":
+            self._onoff = "on"
         # ファイル書き込み
         self._addLineToFile()
 
@@ -66,16 +69,9 @@ class ACState:
     @wind.setter
     def wind(self, x):
         self._wind = x
-        # ファイル書き込み
-        self._addLineToFile()
 
-    @property
-    def wind(self):
-        return self._wind
-
-    @wind.setter
-    def wind(self, x):
-        self._wind = x
+        if self.onoff == "off":
+            self._onoff = "on"
         # ファイル書き込み
         self._addLineToFile()
 
