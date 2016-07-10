@@ -6,19 +6,23 @@ from config import Config
 
 class ACState:
     def __init__(self, context):
-        """
-        CSVファイルから最後の行のデータを読み込む
-        """
         # TODO: self._onoffには'on'と'off'のみが入る
         # self._operatingには'cool','warm','auto','dry'のみが入る
-        # といった制約を設ける必要がある
-        # のでそれを実装しよう
+        # といった制約を設ける必要があるので、それを実装しよう
+
+        # TODO: 現状、インスタンス毎に設定コンテキストを指定しているので、
+        # 管理用のプログラムを書き、参照するCSVファイルの指定を
+        # さらに抽象的なレベルで行いたい
+
+        self._logFileName = context["LogCsvFilePath"]
         with open(context["csvFilePath"], 'r') as f:
+            self._fileName = context["csvFilePath"]
+
             reader = csv.reader(f)
             for row in reader:
                 last_row_list = row
+            # row = next(reader)
 
-            self._fileName = context["csvFilePath"]
             self._onoff = last_row_list[1]
             self._operating = last_row_list[2]
             self._temperature = int(last_row_list[3])
@@ -38,7 +42,7 @@ class ACState:
     def onoff(self, x):
         self._onoff = x
         # ファイル書き込み
-        self._addLineToFile()
+        self._writeFiles()
 
     @property
     def operating(self):
@@ -51,7 +55,7 @@ class ACState:
         if self.onoff == "off":
             self._onoff = "on"
         # ファイル書き込み
-        self._addLineToFile()
+        self._writeFiles()
 
     @property
     def temperature(self):
@@ -67,7 +71,7 @@ class ACState:
         if self.onoff == "off":
             self._onoff = "on"
         # ファイル書き込み
-        self._addLineToFile()
+        self._writeFiles()
 
     @property
     def wind(self):
@@ -80,11 +84,11 @@ class ACState:
         if self.onoff == "off":
             self._onoff = "on"
         # ファイル書き込み
-        self._addLineToFile()
+        self._writeFiles()
 
-    def _addLineToFile(self):
+    def _writeFiles(self):
         """
-        CSVファイルに書き込む用のメソッド
+        method to write csv files
         """
         timestamp = datetime.now()
         data_list = [str(timestamp),
@@ -92,7 +96,14 @@ class ACState:
                         self._operating,
                         self._temperature,
                         self._wind]
-        with open(self._fileName, 'a') as f:
+
+        # write to 1 line csv file that has current A/C state
+        with open(self._fileName, 'w') as f:
+            writer = csv.writer(f, lineterminator='\n')
+            writer.writerow(data_list)
+
+        # write to logs csv file
+        with open(self._logFileName, 'a') as f:
             writer = csv.writer(f, lineterminator='\n')
             writer.writerow(data_list)
 
