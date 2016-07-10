@@ -9,6 +9,10 @@ class ACState:
         """
         CSVファイルから最後の行のデータを読み込む
         """
+        # TODO: self._onoffには'on'と'off'のみが入る
+        # self._operatingには'cool','warm','auto','dry'のみが入る
+        # といった制約を設ける必要がある
+        # のでそれを実装しよう
         with open(context["csvFilePath"], 'r') as f:
             reader = csv.reader(f)
             for row in reader:
@@ -97,6 +101,20 @@ class ACState:
                                   operating=self.operating,
                                   temperature=self.temperature,
                                   wind=self.wind)
+
+
+    class _ACStateConvertedJapanese:
+        OperDictionary = {"cool":"冷房", "warm":"暖房", "dry":"除湿", "auto":"自動"}
+        WindDictionary = {"strong":"強風", "weak":"弱風", "breeze":"微風", "auto":"自動"}
+        def __init__(self, state):
+            self.onoff = state.onoff
+            self.operating = state._ACStateConvertedJapanese.OperDictionary[state.operating]
+            self.temperature = state.temperature
+            self.wind = state._ACStateConvertedJapanese.WindDictionary[state.wind]
+
+    def convertToJapanese(self):
+        self.acConvertedJ = ACState._ACStateConvertedJapanese(self)
+        return self.acConvertedJ
 
 class InfraredSignal:
     controller = Config.CONTROLLER_NAME

@@ -19,7 +19,11 @@ app = create_app()
 @app.route('/')
 def index():
     state = ACState(Config.context) # ステータスデータを読み込む
-    return render_template('index.html', state=state)
+
+    # 日本語変換
+    jstate = state.convertToJapanese()
+
+    return render_template('index.html', state=jstate)
 
 @app.route('/on')
 def turnOn():
@@ -33,7 +37,10 @@ def turnOn():
     if state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
-    return render_template('index.html', state=state)
+    # 日本語変換
+    jstate = state.convertToJapanese()
+
+    return render_template('index.html', state=jstate)
 
 @app.route('/off')
 def turnOff():
@@ -47,7 +54,10 @@ def turnOff():
     if state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
-    return render_template('index.html', state=state)
+    # 日本語変換
+    jstate = state.convertToJapanese()
+
+    return render_template('index.html', state=jstate)
 
 @app.route('/operating/<operatingMode>')
 def modeOperating(operatingMode):
@@ -61,7 +71,10 @@ def modeOperating(operatingMode):
     if state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
-    return render_template('index.html', state=state)
+    # 日本語変換
+    jstate = state.convertToJapanese()
+
+    return render_template('index.html', state=jstate)
 
 @app.route('/temperature/<temperatureMode>')
 def modeTemperature(temperatureMode):
@@ -83,7 +96,10 @@ def modeTemperature(temperatureMode):
     if state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
-    return render_template('index.html', state=state)
+    # 日本語変換
+    jstate = state.convertToJapanese()
+
+    return render_template('index.html', state=jstate)
 
 @app.route('/wind/<windMode>')
 def modeWind(windMode):
@@ -97,7 +113,10 @@ def modeWind(windMode):
     if state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
-    return render_template('index.html', state=state)
+    # 日本語変換
+    jstate = state.convertToJapanese()
+
+    return render_template('index.html', state=jstate)
 
 
 if __name__ == "__main__":
