@@ -5,6 +5,10 @@ from datetime import datetime
 from config import Config
 
 class ACState:
+    ACState_DICT = {"onoff": ("on", "off"),
+                    "operating": ("cool", "warm", "dry", "auto"),
+                    "wind": ("strong", "weak", "breeze", "auto")}
+
     def __init__(self, context):
         # TODO: self._onoffには'on'と'off'のみが入る
         # self._operatingには'cool','warm','auto','dry'のみが入る
@@ -33,6 +37,12 @@ class ACState:
                                         self.operating,
                                         self.temperature,
                                         self.wind)
+    @classmethod
+    def _check_to_set(cls, val, mode):
+        if val in cls.ACState_DICT[mode]:
+            return True
+        else:
+            return False
 
     @property
     def onoff(self):
@@ -40,6 +50,9 @@ class ACState:
 
     @onoff.setter
     def onoff(self, x):
+        # セットして良い値であるかを確認
+        if not self._check_to_set(x, "onoff"):
+            return
         self._onoff = x
         # ファイル書き込み
         self._writeFiles()
@@ -50,8 +63,12 @@ class ACState:
 
     @operating.setter
     def operating(self, x):
+        # セットして良い値であるかを確認
+        if not self._check_to_set(x, "operating"):
+            return
         self._operating = x
 
+        # onoffがoffのときはonにする
         if self.onoff == "off":
             self._onoff = "on"
         # ファイル書き込み
@@ -63,11 +80,13 @@ class ACState:
 
     @temperature.setter
     def temperature(self, x):
-        if 18 <= x <= 30: # 設定温度制限
-            self._temperature = x
-        else:
+        # セットして良い値であるかを確認
+        # 設定温度制限
+        if not 18 <= x <= 30:
             return
+        self._temperature = x
 
+        # onoffがoffのときはonにする
         if self.onoff == "off":
             self._onoff = "on"
         # ファイル書き込み
@@ -79,8 +98,12 @@ class ACState:
 
     @wind.setter
     def wind(self, x):
+        # セットして良い値であるかを確認
+        if not self._check_to_set(x, "wind"):
+            return
         self._wind = x
 
+        # onoffがoffのときはonにする
         if self.onoff == "off":
             self._onoff = "on"
         # ファイル書き込み
