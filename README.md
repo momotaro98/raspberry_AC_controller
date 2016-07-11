@@ -1,18 +1,73 @@
 # raspberry_AC_controller
 
-This is an air conditioning infrared remote controller with Raspberry Pi.
+This is an air conditioning infrared remote controller Web system on Raspberry Pi.
+This system uses Flask Web Framework.
 
-## Prepairation
-#### Raspbian Setting
+**CAUTION**
+This application depends on Python3
+
+## Requirement
+
+### LIRC Setting
+
+#### apt-get install lirc
+
 ```
 # apt-get install lirc
-# echo "dtoverlay=lirc-rpi, gpio_in_pin=24, gpio_out_pin=25" >> /boot/config.txt
 ```
 
-## Init Setting
-fix `config.py`
+#### fix `/etc/config.txt`
+
+```/boot/config.txt
+dtoverlay=lirc-rpi, gpio_in_pin=24, gpio_out_pin=25
 ```
-Class Config:
-    CONTROLLER_NAME = 'Panasonic'
-    SIGNALS = {'stop': 'stop', 'warm': 'warm', 'cool': 'cool'}
+
+#### fix `/etc/lirc/hardware.conf`
+
+```/etc/lirc/hardware.conf
+LIRCD_ARGS="--uinput"
+LOAD_MODULES=true
+DRIVER="default"
+DEVICE="/dev/lirc0"
+MODULES="lirc_rpi"
+```
+
+#### generate `/etc/lirc/lircd.conf`
+未実装
+
+```
+$ python convert.py CONTROLLER_NAME
+```
+
+
+### Application Setting
+
+#### git clone and install required dependencies
+
+```
+$ git clone http://
+$ pip install -r requirements.txt
+```
+
+#### generate `acstate.csv` and `acstate_log.csv`
+
+```
+$ echo "2016-04-01 13:24:00,on,cool,25,auto" >> acstate.csv
+$ touch acstate_log.csv
+```
+
+#### fix `config.py` according to `lircd.conf`
+
+set `CONTROLLER_NAME` and `context`
+
+```
+class Config:
+    CONTROLLER_NAME = '' # You have to set
+
+    context = {"csvFilePath": "acstate.csv",
+               "LogCsvFilePath": "acstate_log.csv"}
+
+    test_context = {"csvFilePath": "test_acstate.csv",
+                    "LogCsvFilePath": "test_acstate_log"}
+
 ```
