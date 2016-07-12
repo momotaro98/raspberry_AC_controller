@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 
 from config import Config
-from model import ACState
+from model import ACState, ReserveOffTimeForm, ReserveOnTimeForm
 
 
 def create_app():
@@ -117,6 +117,27 @@ def modeWind(windMode):
     jstate = state.convertToJapanese()
 
     return render_template('index.html', state=jstate)
+
+
+@app.route('/reservation', methods=['POST', 'GET'])
+def reserve():
+    offForm = ReserveOffTimeForm()
+    onForm = ReserveOnTimeForm()
+    if offForm.validate_on_submit():
+        # 赤外線送信
+
+        # flash表示
+        offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.hour.data, m=offForm.minute.data)
+        flash(offtext)
+        return redirect(url_for('reserve'))
+    if onForm.validate_on_submit():
+        # 赤外線送信
+
+        # flash表示
+        ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.hour.data, m=onForm.minute.data)
+        flash(ontext)
+        return redirect(url_for('reserve'))
+    return render_template('reservation.html', offForm=offForm, onForm=onForm)
 
 
 if __name__ == "__main__":

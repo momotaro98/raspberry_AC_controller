@@ -1,7 +1,7 @@
 a:hover {
     text-decoration: none;
 }
-#text {
+.text {
     clear: right;
     display: block;
     margin: 0 auto;

@@ -2,6 +2,9 @@ import os
 import csv
 from datetime import datetime
 
+from flask.ext.wtf import Form
+from wtforms import SelectField, SubmitField
+
 from config import Config
 
 class ACState:
@@ -172,3 +175,14 @@ class InfraredSignal:
 
         # 正常に送信できたとき
         return
+
+
+class ReserveOffTimeForm(Form):
+    hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
+    minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    submit = SubmitField('送信')
+
+class ReserveOnTimeForm(Form):
+    hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
+    minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    submit = SubmitField('送信')
