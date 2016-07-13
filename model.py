@@ -173,15 +173,21 @@ class InfraredSignal:
         return
 
 
-class ReserveOffTimeForm(Form):
+class ReserveForm(Form):
+    name = "abstract"
+
+class ReserveTimeForm(ReserveForm):
+    name = "timeform"
     hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
     minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
-class ReserveOnTimeForm(Form):
-    hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
-    minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
-    submit = SubmitField('送信')
+class ReserveOffTimeForm(ReserveTimeForm):
+    name = "offtimeform"
 
-class UndoReservationForm(Form):
+class ReserveOnTimeForm(ReserveTimeForm):
+    name = "offtimeform"
+
+class UndoReservationForm(ReserveForm):
+    name = "undoform"
     submit = SubmitField('送信')
