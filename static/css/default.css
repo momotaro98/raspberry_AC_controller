@@ -89,3 +89,6 @@ a:hover {
     background: #c0c0c0;
     box-shadow: 0 6px 0 #e91b0c;
 }
+#reserveBlock {
+    padding: 10px;
+}

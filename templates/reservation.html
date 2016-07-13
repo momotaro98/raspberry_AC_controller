@@ -11,17 +11,23 @@
 {% endfor %}
 
 <div class="text">
-    <h2>切予約</h2>
+    <h2>タイマー予約</h2>
 </div>
-{{ wtf.quick_form(offForm) }}
 
-<div class="text">
-    <h2>入予約</h2>
+<div id="reserveBlock">
+    <div class="text">
+        <h2>切予約</h2>
+    </div>
+    {{ wtf.quick_form(offForm) }}
+
+    <div class="text">
+        <h2>入予約</h2>
+    </div>
+    {{ wtf.quick_form(onForm) }}
+    <div class="text">
+        <h2>予約取消</h2>
+    </div>
+    {{ wtf.quick_form(undoForm) }}
 </div>
-{{ wtf.quick_form(onForm) }}
-<div class="text">
-    <h2>予約取消</h2>
-</div>
-{{ wtf.quick_form(undoForm) }}
 
 {% endblock %}
