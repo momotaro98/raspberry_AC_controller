@@ -13,10 +13,6 @@ class ACState:
                     "wind": ("strong", "weak", "breeze", "auto")}
 
     def __init__(self, context):
-        # TODO: self._onoffには'on'と'off'のみが入る
-        # self._operatingには'cool','warm','auto','dry'のみが入る
-        # といった制約を設ける必要があるので、それを実装しよう
-
         # TODO: 現状、インスタンス毎に設定コンテキストを指定しているので、
         # 管理用のプログラムを書き、参照するCSVファイルの指定を
         # さらに抽象的なレベルで行いたい
@@ -185,4 +181,7 @@ class ReserveOffTimeForm(Form):
 class ReserveOnTimeForm(Form):
     hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
     minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    submit = SubmitField('送信')
+
+class UndoReservationForm(Form):
     submit = SubmitField('送信')
