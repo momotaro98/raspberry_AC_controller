@@ -276,8 +276,8 @@ class ReserveForm(Form):
         pass
 
 class ReserveOffTimeForm(ReserveForm):
-    hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
-    minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    off_hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
+    off_minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
     def change_ReserveState(self, acstate):
@@ -289,11 +289,11 @@ class ReserveOffTimeForm(ReserveForm):
         acstate.onoff = "off"
 
         # 設定時間をセットする
-        acstate.settime = "{0}:{1}".format(self.hour.data, self.minute.data)
+        acstate.settime = "{0}:{1}".format(self.off_hour.data, self.off_minute.data)
 
 class ReserveOnTimeForm(ReserveForm):
-    hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
-    minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    on_hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
+    on_minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
     def change_ReserveState(self, acstate):
@@ -305,10 +305,9 @@ class ReserveOnTimeForm(ReserveForm):
         acstate.onoff = "on"
 
         # 設定時間をセットする
-        acstate.settime = "{0}:{1}".format(self.hour.data, self.minute.data)
+        acstate.settime = "{0}:{1}".format(self.on_hour.data, self.on_minute.data)
 
 class UndoReservationForm(ReserveForm):
-    name = "undoform"
     submit = SubmitField('送信')
 
     def change_ReserveState(self, acstate):

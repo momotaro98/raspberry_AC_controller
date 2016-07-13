@@ -135,7 +135,7 @@ def reserve():
         # 赤外線送信
 
         # flash表示
-        offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.hour.data, m=offForm.minute.data)
+        offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.off_hour.data, m=offForm.off_minute.data)
         flash(offtext)
         return redirect(url_for('reserve'))
 
@@ -146,7 +146,7 @@ def reserve():
         # 赤外線送信
 
         # flash表示
-        ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.hour.data, m=onForm.minute.data)
+        ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.on_hour.data, m=onForm.on_minute.data)
         flash(ontext)
         return redirect(url_for('reserve'))
 
