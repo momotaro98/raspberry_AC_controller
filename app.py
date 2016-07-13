@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 
 from config import Config
-from model import ACState, ReserveOffTimeForm, ReserveOnTimeForm, UndoReservationForm
+from model import ACState, ReserveState, ReserveOffTimeForm, ReserveOnTimeForm, UndoReservationForm
 
 
 def create_app():
@@ -121,32 +121,48 @@ def modeWind(windMode):
 
 @app.route('/reservation', methods=['POST', 'GET'])
 def reserve():
+    state = ReserveState(Config.context)
+
     offForm = ReserveOffTimeForm()
     onForm = ReserveOnTimeForm()
     undoForm = UndoReservationForm()
+
     if offForm.validate_on_submit():
+        print("HELLO!!!")
+        # state書き換え
+        state.change_state(offForm)
+
         # 赤外線送信
 
         # flash表示
         offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.hour.data, m=offForm.minute.data)
         flash(offtext)
         return redirect(url_for('reserve'))
+
     if onForm.validate_on_submit():
+        # state書き換え
+        state.change_state(onForm)
+
         # 赤外線送信
 
         # flash表示
         ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.hour.data, m=onForm.minute.data)
         flash(ontext)
         return redirect(url_for('reserve'))
+
     if undoForm.validate_on_submit():
+        # state書き換え
         # 取り消し処理
+        state.change_state(undoForm)
+
+        # 赤外線送信
 
         # flash表示
         undotext = "予約を取り消しました"
         flash(undotext)
         return redirect(url_for('reserve'))
 
-    return render_template('reservation.html', offForm=offForm, onForm=onForm, undoForm=undoForm)
+    return render_template('reservation.html', state=state, offForm=offForm, onForm=onForm, undoForm=undoForm)
 
 
 if __name__ == "__main__":

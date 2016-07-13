@@ -7,6 +7,8 @@ from wtforms import SelectField, SubmitField
 
 from config import Config
 
+# TODO: ReserveStateクラスを作っていくならば抽象クラスを設計する
+
 class ACState:
     ACState_DICT = {"onoff": ("on", "off"),
                     "operating": ("cool", "warm", "dry", "auto"),
@@ -17,9 +19,9 @@ class ACState:
         # 管理用のプログラムを書き、参照するCSVファイルの指定を
         # さらに抽象的なレベルで行いたい
 
-        self._logFileName = context["LogCsvFilePath"]
-        with open(context["csvFilePath"], 'r') as f:
-            self._fileName = context["csvFilePath"]
+        self._logFileName = context["acStateLogCSVFilePath"]
+        with open(context["acStateCSVFilePath"], 'r') as f:
+            self._fileName = context["acStateCSVFilePath"]
 
             reader = csv.reader(f)
             for row in reader:
@@ -149,6 +151,102 @@ class ACState:
         self.acConvertedJ = ACState._ACStateConvertedJapanese(self)
         return self.acConvertedJ
 
+
+class ReserveState:
+    ReserveState_DICT = {"onoff": ("on", "off", "undo"),}
+
+    def __init__(self, context):
+        self._logFileName = context["reserveStateLogCSVFilePath"]
+        with open(context["reserveStateCSVFilePath"], 'r') as f:
+            self._fileName = context["reserveStateCSVFilePath"]
+
+            reader = csv.reader(f)
+            # TODO: この書き方だとUnboundLocalErrorが起きてしまうし、カッコ悪いので修正したい
+            for row in reader:
+                last_row_list = row
+
+            self._timestamp = last_row_list[0] # TODO:use datetime library
+            self._onoff = last_row_list[1]
+            self._settime = last_row_list[2]
+
+    def __repr__(self):
+        return '<{0} {1} {2}>'.format(self.timestamp, self.onoff, self.settime)
+
+    @property
+    def timestamp(self):
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, x):
+        self._timestamp = datetime.now()
+
+    @property
+    def onoff(self):
+        return self._onoff
+
+    @onoff.setter
+    def onoff(self, x):
+        # セットして良い値であるかを確認
+        if not self._check_to_set(x, "onoff"):
+            return
+        self._onoff = x
+
+    @property
+    def settime(self):
+        return self._settime
+
+    @settime.setter
+    def settime(self, x):
+        # セットして良い値であるかを確認 # TODO: ←を書く
+        '''
+        if not self._check_to_set(x, "settime"):
+            return
+        '''
+        self._settime = x
+
+    def change_state(self, form):
+        # アトリビュートを書き換え
+        form.change_ReserveState(self)
+        # ↑自身のアトリビュートの変更を他のクラスに任せる
+        # ということをしてしまっているのだが、これはNGであろうか？
+
+        # ファイル書き込み
+        self._writeFiles()
+
+    @classmethod
+    def _check_to_set(cls, val, mode):
+        if val in cls.ReserveState_DICT[mode]:
+            return True
+        else:
+            return False
+
+    def _writeFiles(self):
+        """
+        method to write csv files
+        """
+        timestamp = datetime.now()
+        data_list = [str(timestamp),
+                        self.onoff,
+                        self.settime]
+        # TODO: ↑この部分だけがACStateのものと異なるのだが、
+        # メソッドを抽象化するにはどうしたら良いか
+
+        # write to 1 line csv file that has current A/C state
+        with open(self._fileName, 'w') as f:
+            writer = csv.writer(f, lineterminator='\n')
+            writer.writerow(data_list)
+
+        # write to logs csv file
+        with open(self._logFileName, 'a') as f:
+            writer = csv.writer(f, lineterminator='\n')
+            writer.writerow(data_list)
+
+    def sendSignalToAC(self):
+        return InfraredSignal.sendSignal(onoff=self.onoff,
+                                  operating=self.operating,
+                                  temperature=self.temperature,
+                                  wind=self.wind)
+
 class InfraredSignal:
     controller = Config.CONTROLLER_NAME
 
@@ -174,20 +272,52 @@ class InfraredSignal:
 
 
 class ReserveForm(Form):
-    name = "abstract"
+    def change_ReserveState(self, acstate):
+        pass
 
-class ReserveTimeForm(ReserveForm):
-    name = "timeform"
+class ReserveOffTimeForm(ReserveForm):
     hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
     minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
-class ReserveOffTimeForm(ReserveTimeForm):
-    name = "offtimeform"
+    def change_ReserveState(self, acstate):
+        # タイムスタンプを押す
+        # TODO: setterの方でもdatetime.now()しているので二度手間になっている
+        acstate.timestamp = datetime.now()
 
-class ReserveOnTimeForm(ReserveTimeForm):
-    name = "offtimeform"
+        # onoff変更
+        acstate.onoff = "off"
+
+        # 設定時間をセットする
+        acstate.settime = "{0}:{1}".format(self.hour.data, self.minute.data)
+
+class ReserveOnTimeForm(ReserveForm):
+    hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
+    minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    submit = SubmitField('送信')
+
+    def change_ReserveState(self, acstate):
+        # タイムスタンプを押す
+        # TODO: setterの方でもdatetime.now()しているので二度手間になっている
+        acstate.timestamp = datetime.now()
+
+        # onoff変更
+        acstate.onoff = "on"
+
+        # 設定時間をセットする
+        acstate.settime = "{0}:{1}".format(self.hour.data, self.minute.data)
 
 class UndoReservationForm(ReserveForm):
     name = "undoform"
     submit = SubmitField('送信')
+
+    def change_ReserveState(self, acstate):
+        # タイムスタンプを押す
+        # TODO: setterの方でもdatetime.now()しているので二度手間になっている
+        acstate.timestamp = datetime.now()
+
+        # onoff変更
+        acstate.onoff = "undo"
+
+        # 設定時間をセットする
+        acstate.settime = "0:0"
