@@ -162,7 +162,13 @@ def reserve():
         flash(undotext)
         return redirect(url_for('reserve'))
 
-    return render_template('reservation.html', state=state, offForm=offForm, onForm=onForm, undoForm=undoForm)
+    timeout_text = state.makeTimeoutText()
+
+    return render_template('reservation.html',
+                            timeout_text=timeout_text,
+                            offForm=offForm,
+                            onForm=onForm,
+                            undoForm=undoForm)
 
 
 if __name__ == "__main__":

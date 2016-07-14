@@ -1,11 +1,11 @@
 import os
 import csv
-from datetime import datetime
 
 from flask.ext.wtf import Form
 from wtforms import SelectField, SubmitField
 
 from config import Config
+import utils
 
 # TODO: ReserveStateクラスを作っていくならば抽象クラスを設計する
 
@@ -28,22 +28,33 @@ class ACState:
                 last_row_list = row
             # row = next(reader)
 
+            self._timestamp = utils.strToDatetime(last_row_list[0])
             self._onoff = last_row_list[1]
             self._operating = last_row_list[2]
             self._temperature = int(last_row_list[3])
             self._wind = last_row_list[4]
 
     def __repr__(self):
-        return '<{0} {1} {2} {3}>'.format(self.onoff,
-                                        self.operating,
-                                        self.temperature,
-                                        self.wind)
+        return '<{0} {1} {2} {3} {4}>'.format(self.timestamp,
+                                              self.onoff,
+                                              self.operating,
+                                              self.temperature,
+                                              self.wind)
+
     @classmethod
     def _check_to_set(cls, val, mode):
         if val in cls.ACState_DICT[mode]:
             return True
         else:
             return False
+
+    @property
+    def timestamp(self):
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, x):
+        pass
 
     @property
     def onoff(self):
@@ -114,12 +125,12 @@ class ACState:
         """
         method to write csv files
         """
-        timestamp = datetime.now()
-        data_list = [str(timestamp),
-                        self._onoff,
-                        self._operating,
-                        self._temperature,
-                        self._wind]
+        timestamp = utils.nowTimeToString()
+        data_list = [timestamp,
+                     self._onoff,
+                     self._operating,
+                     self._temperature,
+                     self._wind]
 
         # write to 1 line csv file that has current A/C state
         with open(self._fileName, 'w') as f:
@@ -165,9 +176,9 @@ class ReserveState:
             for row in reader:
                 last_row_list = row
 
-            self._timestamp = last_row_list[0] # TODO:use datetime library
+            self._timestamp = utils.strToDatetime(last_row_list[0])
             self._onoff = last_row_list[1]
-            self._settime = last_row_list[2]
+            self._settime = int(last_row_list[2]) # 数値にする min
 
     def __repr__(self):
         return '<{0} {1} {2}>'.format(self.timestamp, self.onoff, self.settime)
@@ -178,7 +189,7 @@ class ReserveState:
 
     @timestamp.setter
     def timestamp(self, x):
-        self._timestamp = datetime.now()
+        pass
 
     @property
     def onoff(self):
@@ -197,11 +208,10 @@ class ReserveState:
 
     @settime.setter
     def settime(self, x):
-        # セットして良い値であるかを確認 # TODO: ←を書く
-        '''
-        if not self._check_to_set(x, "settime"):
+        # セットして良い値であるかを確認
+        # int型であるかを確認する
+        if not isinstance(x, int):
             return
-        '''
         self._settime = x
 
     def change_state(self, form):
@@ -224,10 +234,8 @@ class ReserveState:
         """
         method to write csv files
         """
-        timestamp = datetime.now()
-        data_list = [str(timestamp),
-                        self.onoff,
-                        self.settime]
+        timestamp = utils.nowTimeToString()
+        data_list = [timestamp, self.onoff, self.settime]
         # TODO: ↑この部分だけがACStateのものと異なるのだが、
         # メソッドを抽象化するにはどうしたら良いか
 
@@ -242,10 +250,28 @@ class ReserveState:
             writer.writerow(data_list)
 
     def sendSignalToAC(self):
+        """
         return InfraredSignal.sendSignal(onoff=self.onoff,
                                   operating=self.operating,
                                   temperature=self.temperature,
                                   wind=self.wind)
+        """
+        pass # TODO: implement ReserveState sendSignal method
+
+    def makeTimeoutText(self):
+        text = ""
+        tdelta = utils.nowDatetime() - self.timestamp
+        processed_time_minute = utils.secToMin(tdelta.seconds)
+        remaining_time = self.settime - processed_time_minute
+        if remaining_time > 0:
+            # タイマーが切れていないとき
+            th, tm = utils.minTohourMin(remaining_time)
+            if self.onoff == "off":
+                text = "切予約済 {0}時間{1}分後".format(th, tm)
+            if self.onoff == "on":
+                text = "入予約済 {0}時間{1}分後".format(th, tm)
+        return text
+
 
 class InfraredSignal:
     controller = Config.CONTROLLER_NAME
@@ -272,7 +298,7 @@ class InfraredSignal:
 
 
 class ReserveForm(Form):
-    def change_ReserveState(self, acstate):
+    def change_ReserveState(self, rstate):
         pass
 
 class ReserveOffTimeForm(ReserveForm):
@@ -280,43 +306,33 @@ class ReserveOffTimeForm(ReserveForm):
     off_minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
-    def change_ReserveState(self, acstate):
-        # タイムスタンプを押す
-        # TODO: setterの方でもdatetime.now()しているので二度手間になっている
-        acstate.timestamp = datetime.now()
-
+    def change_ReserveState(self, rstate):
         # onoff変更
-        acstate.onoff = "off"
+        rstate.onoff = "off"
 
         # 設定時間をセットする
-        acstate.settime = "{0}:{1}".format(self.off_hour.data, self.off_minute.data)
+        rstate.settime = utils.hourminToMin(self.off_hour.data,
+                                            self.off_minute.data)
 
 class ReserveOnTimeForm(ReserveForm):
     on_hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
     on_minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
-    def change_ReserveState(self, acstate):
-        # タイムスタンプを押す
-        # TODO: setterの方でもdatetime.now()しているので二度手間になっている
-        acstate.timestamp = datetime.now()
-
+    def change_ReserveState(self, rstate):
         # onoff変更
-        acstate.onoff = "on"
+        rstate.onoff = "on"
 
         # 設定時間をセットする
-        acstate.settime = "{0}:{1}".format(self.on_hour.data, self.on_minute.data)
+        rstate.settime = utils.hourminToMin(self.on_hour.data,
+                                            self.on_minute.data)
 
 class UndoReservationForm(ReserveForm):
     submit = SubmitField('送信')
 
-    def change_ReserveState(self, acstate):
-        # タイムスタンプを押す
-        # TODO: setterの方でもdatetime.now()しているので二度手間になっている
-        acstate.timestamp = datetime.now()
-
+    def change_ReserveState(self, rstate):
         # onoff変更
-        acstate.onoff = "undo"
+        rstate.onoff = "undo"
 
         # 設定時間をセットする
-        acstate.settime = "0:0"
+        rstate.settime = 0 # UNDOの場合は0
