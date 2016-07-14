@@ -17,7 +17,7 @@ def hourminToMin(h, m):
     h, m  = int(h), int(m)
     return 60*h + m
 
-def minTohourMin(m):
+def minToHourMin(m):
     rh = m // 60
     rm = m - 60*rh
     return rh, rm

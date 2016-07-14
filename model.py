@@ -143,10 +143,17 @@ class ACState:
             writer.writerow(data_list)
 
     def sendSignalToAC(self):
-        return InfraredSignal.sendSignal(onoff=self.onoff,
-                                  operating=self.operating,
-                                  temperature=self.temperature,
-                                  wind=self.wind)
+        signal = self._makeSignalName()
+        if signal: # 正しく信号名が作られたとき
+            return InfraredSignal.sendSignal(signal)
+
+    def _makeSignalName(self):
+        if self.onoff == "off":
+            return "off" # TODO: 赤外線信号対応テーブルを作って保守性を高くする
+        elif self.onoff == "on":
+            return "{0}{1}{2}".format(self.operating, self.temperature, self.wind)
+        else:
+            return
 
 
     class _ACStateConvertedJapanese:
@@ -250,13 +257,19 @@ class ReserveState:
             writer.writerow(data_list)
 
     def sendSignalToAC(self):
-        """
-        return InfraredSignal.sendSignal(onoff=self.onoff,
-                                  operating=self.operating,
-                                  temperature=self.temperature,
-                                  wind=self.wind)
-        """
-        pass # TODO: implement ReserveState sendSignal method
+        # TODO: ACStateとまったく同じメソッドだからどうにかする
+        signal = self._makeSignalName()
+        if signal: # 正しく信号名が作られたとき
+            return InfraredSignal.sendSignal(signal)
+
+    def _makeSignalName(self):
+        if self.onoff == "undo":
+            return "undo" # TODO: 赤外線信号対応テーブルを作って保守性を高くする
+        elif self.onoff == "on" or self.onoff == "off":
+            h, m = utils.minToHourMin(self.settime)
+            return "{0}{1:0>2}{2:0>2}".format(self.onoff, h, m)
+        else:
+            return
 
     def makeTimeoutText(self):
         text = ""
@@ -265,37 +278,12 @@ class ReserveState:
         remaining_time = self.settime - processed_time_minute
         if remaining_time > 0:
             # タイマーが切れていないとき
-            th, tm = utils.minTohourMin(remaining_time)
+            th, tm = utils.minToHourMin(remaining_time)
             if self.onoff == "off":
                 text = "切予約済 {0}時間{1}分後".format(th, tm)
             if self.onoff == "on":
                 text = "入予約済 {0}時間{1}分後".format(th, tm)
         return text
-
-
-class InfraredSignal:
-    controller = Config.CONTROLLER_NAME
-
-    @classmethod
-    def sendSignal(cls, **states):
-        # statesから1つの信号NAMEを生成
-        if states["onoff"] == "off":
-            signal = "off"
-        elif states["onoff"] == "on":
-            signal = "{0}{1}{2}".format(states["operating"],
-                                        states["temperature"],
-                                        states["wind"])
-        else:
-            return
-
-        # 赤外線を送信する
-        if int(os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller, signal))):
-        # 異常終了したとき
-            return "error"
-
-        # 正常に送信できたとき
-        return
-
 
 class ReserveForm(Form):
     def change_ReserveState(self, rstate):
@@ -336,3 +324,17 @@ class UndoReservationForm(ReserveForm):
 
         # 設定時間をセットする
         rstate.settime = 0 # UNDOの場合は0
+
+
+class InfraredSignal:
+    controller = Config.CONTROLLER_NAME
+
+    @classmethod
+    def sendSignal(cls, signal):
+        # 赤外線を送信する
+        if int(os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller, signal))):
+        # irsendが正しく実行されなかったとき
+            return False # TODO: irsendコマンドのエラーの場合どうするか
+
+        # 正常に送信できたとき
+        return True

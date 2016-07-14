@@ -34,7 +34,7 @@ def turnOn():
     state.onoff = "on"
 
     # stateを元に赤外線送信
-    if state.sendSignalToAC():
+    if not state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
     # 日本語変換
@@ -51,7 +51,7 @@ def turnOff():
     state.onoff = "off"
 
     # stateを元に赤外線送信
-    if state.sendSignalToAC():
+    if not state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
     # 日本語変換
@@ -68,7 +68,7 @@ def modeOperating(operatingMode):
     state.operating = operatingMode
 
     # stateを元に赤外線送信
-    if state.sendSignalToAC():
+    if not state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
     # 日本語変換
@@ -93,7 +93,7 @@ def modeTemperature(temperatureMode):
         state.temperature -= 1
 
     # stateを元に赤外線送信
-    if state.sendSignalToAC():
+    if not state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
     # 日本語変換
@@ -110,7 +110,7 @@ def modeWind(windMode):
     state.wind = windMode
 
     # stateを元に赤外線送信
-    if state.sendSignalToAC():
+    if not state.sendSignalToAC():
         flash('信号を送信できませんでした')
 
     # 日本語変換
@@ -128,15 +128,16 @@ def reserve():
     undoForm = UndoReservationForm()
 
     if offForm.validate_on_submit():
-        print("HELLO!!!")
         # state書き換え
         state.change_state(offForm)
 
         # 赤外線送信
-
-        # flash表示
-        offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.off_hour.data, m=offForm.off_minute.data)
-        flash(offtext)
+        # stateを元に赤外線送信
+        if not state.sendSignalToAC():
+            flash('信号を送信できませんでした')
+        else:
+            offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.off_hour.data, m=offForm.off_minute.data)
+            flash(offtext)
         return redirect(url_for('reserve'))
 
     if onForm.validate_on_submit():
@@ -144,10 +145,12 @@ def reserve():
         state.change_state(onForm)
 
         # 赤外線送信
-
-        # flash表示
-        ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.on_hour.data, m=onForm.on_minute.data)
-        flash(ontext)
+        # stateを元に赤外線送信
+        if not state.sendSignalToAC():
+            flash('信号を送信できませんでした')
+        else:
+            ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.on_hour.data, m=onForm.on_minute.data)
+            flash(ontext)
         return redirect(url_for('reserve'))
 
     if undoForm.validate_on_submit():
@@ -156,10 +159,12 @@ def reserve():
         state.change_state(undoForm)
 
         # 赤外線送信
-
-        # flash表示
-        undotext = "予約を取り消しました"
-        flash(undotext)
+        # stateを元に赤外線送信
+        if not state.sendSignalToAC():
+            flash('信号を送信できませんでした')
+        else:
+            undotext = "予約を取り消しました"
+            flash(undotext)
         return redirect(url_for('reserve'))
 
     timeout_text = state.makeTimeoutText()
