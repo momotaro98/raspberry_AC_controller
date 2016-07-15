@@ -9,6 +9,7 @@ import utils
 
 # TODO: ReserveStateクラスを作っていくならば抽象クラスを設計する
 
+
 class ACState:
     ACState_DICT = {"onoff": ("on", "off"),
                     "operating": ("cool", "warm", "dry", "auto"),
@@ -144,26 +145,32 @@ class ACState:
 
     def sendSignalToAC(self):
         signal = self._makeSignalName()
-        if signal: # 正しく信号名が作られたとき
+        if signal:  # 正しく信号名が作られたとき
             return InfraredSignal.sendSignal(signal)
 
     def _makeSignalName(self):
         if self.onoff == "off":
-            return "off" # TODO: 赤外線信号対応テーブルを作って保守性を高くする
+            return "off"  # TODO: 赤外線信号対応テーブルを作って保守性を高くする
         elif self.onoff == "on":
-            return "{0}{1}{2}".format(self.operating, self.temperature, self.wind)
+            return "{0}{1}{2}".format(self.operating,
+                                      self.temperature,
+                                      self.wind)
         else:
             return
 
-
     class _ACStateConvertedJapanese:
-        OperDictionary = {"cool":"冷房", "warm":"暖房", "dry":"除湿", "auto":"自動"}
-        WindDictionary = {"strong":"強風", "weak":"弱風", "breeze":"微風", "auto":"自動"}
+        OperDictionary = {"cool": "冷房", "warm": "暖房",
+                          "dry": "除湿", "auto": "自動"}
+        WindDictionary = {"strong": "強風", "weak": "弱風",
+                          "breeze": "微風", "auto": "自動"}
+
         def __init__(self, state):
             self.onoff = state.onoff
-            self.operating = state._ACStateConvertedJapanese.OperDictionary[state.operating]
+            self.operating = state._ACStateConvertedJapanese.\
+                OperDictionary[state.operating]
             self.temperature = state.temperature
-            self.wind = state._ACStateConvertedJapanese.WindDictionary[state.wind]
+            self.wind = state._ACStateConvertedJapanese.\
+                WindDictionary[state.wind]
 
     def convertToJapanese(self):
         self.acConvertedJ = ACState._ACStateConvertedJapanese(self)
@@ -171,7 +178,7 @@ class ACState:
 
 
 class ReserveState:
-    ReserveState_DICT = {"onoff": ("on", "off", "undo"),}
+    ReserveState_DICT = {"onoff": ("on", "off", "undo")}
 
     def __init__(self, context):
         self._logFileName = context["reserveStateLogCSVFilePath"]
@@ -185,7 +192,7 @@ class ReserveState:
 
             self._timestamp = utils.strToDatetime(last_row_list[0])
             self._onoff = last_row_list[1]
-            self._settime = int(last_row_list[2]) # 数値にする min
+            self._settime = int(last_row_list[2])  # 数値にする min
 
     def __repr__(self):
         return '<{0} {1} {2}>'.format(self.timestamp, self.onoff, self.settime)
@@ -259,12 +266,12 @@ class ReserveState:
     def sendSignalToAC(self):
         # TODO: ACStateとまったく同じメソッドだからどうにかする
         signal = self._makeSignalName()
-        if signal: # 正しく信号名が作られたとき
+        if signal:  # 正しく信号名が作られたとき
             return InfraredSignal.sendSignal(signal)
 
     def _makeSignalName(self):
         if self.onoff == "undo":
-            return "undo" # TODO: 赤外線信号対応テーブルを作って保守性を高くする
+            return "undo"  # TODO: 赤外線信号対応テーブルを作って保守性を高くする
         elif self.onoff == "on" or self.onoff == "off":
             h, m = utils.minToHourMin(self.settime)
             return "{0}{1:0>2}{2:0>2}".format(self.onoff, h, m)
@@ -285,13 +292,17 @@ class ReserveState:
                 text = "入予約済 {0}時間{1}分後".format(th, tm)
         return text
 
+
 class ReserveForm(Form):
     def change_ReserveState(self, rstate):
         pass
 
+
 class ReserveOffTimeForm(ReserveForm):
-    off_hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
-    off_minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    off_hour = SelectField('時間', choices=[
+        (str(i), str(i)) for i in range(0, 13)])  # 最大12時間
+    off_minute = SelectField('分', choices=[
+        (str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
     def change_ReserveState(self, rstate):
@@ -302,9 +313,12 @@ class ReserveOffTimeForm(ReserveForm):
         rstate.settime = utils.hourminToMin(self.off_hour.data,
                                             self.off_minute.data)
 
+
 class ReserveOnTimeForm(ReserveForm):
-    on_hour = SelectField('時間', choices=[(str(i), str(i)) for i in range(0, 13)]) # 最大12時間
-    on_minute = SelectField('分', choices=[(str(0), str(0)), (str(30), str(30))])
+    on_hour = SelectField('時間', choices=[
+        (str(i), str(i)) for i in range(0, 13)])  # 最大12時間
+    on_minute = SelectField('分', choices=[
+        (str(0), str(0)), (str(30), str(30))])
     submit = SubmitField('送信')
 
     def change_ReserveState(self, rstate):
@@ -315,6 +329,7 @@ class ReserveOnTimeForm(ReserveForm):
         rstate.settime = utils.hourminToMin(self.on_hour.data,
                                             self.on_minute.data)
 
+
 class UndoReservationForm(ReserveForm):
     submit = SubmitField('送信')
 
@@ -323,7 +338,7 @@ class UndoReservationForm(ReserveForm):
         rstate.onoff = "undo"
 
         # 設定時間をセットする
-        rstate.settime = 0 # UNDOの場合は0
+        rstate.settime = 0  # UNDOの場合は0
 
 
 class InfraredSignal:
@@ -332,9 +347,10 @@ class InfraredSignal:
     @classmethod
     def sendSignal(cls, signal):
         # 赤外線を送信する
-        if int(os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller, signal))):
-        # irsendが正しく実行されなかったとき
-            return False # TODO: irsendコマンドのエラーの場合どうするか
+        if int(os.system('irsend SEND_ONCE {0} {1}'.format(cls.controller,
+                                                           signal))):
+            # irsendが正しく実行されなかったとき
+            return False  # TODO: irsendコマンドのエラーの場合どうするか
 
         # 正常に送信できたとき
         return True

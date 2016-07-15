@@ -21,7 +21,7 @@ try:
         f1.write("      begin raw_codes\n")
         f1.write("\n")
 
-        ### Parse Process Start ###
+        # Parse Process Start
         for dpath, dnames, fnames in os.walk(SIGNAL_FILES_PATH):
             for fname in fnames:
                 print("Generate {0} Button...".format(fname))
@@ -43,7 +43,7 @@ try:
                         f1.write(pro_line)
                 f1.write("\n")
                 f1.write("\n")
-        ### Parse Process END ###
+        # Parse Process END
 
         f1.write("      end raw_codes\n")
         f1.write("\n")
@@ -52,4 +52,6 @@ try:
 
 except IndexError:
     print("Error!")
-    print("Usage Example: $ python raw_convert.py /home/pi/lirc CONTROLLER_NAME")
+    print(
+          "Usage: $ python raw_convert.py /home/pi/lirc CONTROLLER_NAME"
+         )
