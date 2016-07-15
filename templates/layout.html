@@ -7,8 +7,8 @@
 {% block head %}
 {{ super() }}
 <meta charset="utf-8">
-<link type="text/css" rel="stylesheet" href="/static/css/default.css"/>
-<link rel="shortcut icon" href="/static/image/favicon.ico">
+<link type="text/css" rel="stylesheet" href="{{ url_for('.static', filename='css/default.css') }}"/>
+<link rel="shortcut icon" href="{{ url_for('.static', filename='image/favicon.ico') }}">
 {% endblock %}
 
 

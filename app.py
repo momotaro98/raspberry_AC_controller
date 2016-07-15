@@ -23,7 +23,7 @@ def index():
     # 日本語変換
     jstate = state.convertToJapanese()
 
-    return render_template('index.html', state=jstate)
+    return render_template('index.html', state=state, jstate=jstate)
 
 @app.route('/on')
 def turnOn():
@@ -40,7 +40,7 @@ def turnOn():
     # 日本語変換
     jstate = state.convertToJapanese()
 
-    return render_template('index.html', state=jstate)
+    return render_template('index.html', state=state, jstate=jstate)
 
 @app.route('/off')
 def turnOff():
@@ -57,7 +57,7 @@ def turnOff():
     # 日本語変換
     jstate = state.convertToJapanese()
 
-    return render_template('index.html', state=jstate)
+    return render_template('index.html', state=state, jstate=jstate)
 
 @app.route('/operating/<operatingMode>')
 def modeOperating(operatingMode):
@@ -74,7 +74,7 @@ def modeOperating(operatingMode):
     # 日本語変換
     jstate = state.convertToJapanese()
 
-    return render_template('index.html', state=jstate)
+    return render_template('index.html', state=state, jstate=jstate)
 
 @app.route('/temperature/<temperatureMode>')
 def modeTemperature(temperatureMode):
@@ -99,7 +99,7 @@ def modeTemperature(temperatureMode):
     # 日本語変換
     jstate = state.convertToJapanese()
 
-    return render_template('index.html', state=jstate)
+    return render_template('index.html', state=state, jstate=jstate)
 
 @app.route('/wind/<windMode>')
 def modeWind(windMode):
@@ -116,7 +116,7 @@ def modeWind(windMode):
     # 日本語変換
     jstate = state.convertToJapanese()
 
-    return render_template('index.html', state=jstate)
+    return render_template('index.html', state=state, jstate=jstate)
 
 
 @app.route('/reservation', methods=['POST', 'GET'])

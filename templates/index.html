@@ -13,21 +13,23 @@
     <h2>WEBリモコン</h2>
 </div>
 -->
+<div id="onoffMode" title="{{ state.onoff }}"></div>
+
 <div class="container">
     <div id="stateModes" class="row">
         <div class="col-xs-3">
-            <div id="operatingMode" class="state">
-                {{ state.operating }} 運転
+            <div id="operatingMode" class="state" title="{{ state.operating }}">
+                {{ jstate.operating }} 運転
             </div>
         </div>
         <div class="col-xs-6">
             <div id="temperatureMode" class="state">
-                設定温度 {{ state.temperature }}℃
+                設定温度 {{ jstate.temperature }}℃
             </div>
         </div>
         <div class="col-xs-3">
             <div id="windMode" class="state">
-                風速 {{ state.wind }}
+                風速 {{ jstate.wind }}
             </div>
         </div>
     </div>
@@ -102,4 +104,10 @@
         </a>
     </div>
 </div>
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('.static', filename='js/acdisp.js') }}"></script>
+{% endblock %}
+
 {% endblock %}
