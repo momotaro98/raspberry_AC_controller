@@ -49,11 +49,13 @@ $ git clone http://
 $ pip install -r requirements.txt
 ```
 
-#### generate `acstate.csv` and `acstate_log.csv`
+#### generate `acstate.csv`, `acstate_log.csv`, `reserve_state.csv`, and `reserve_state_log.csv`
 
 ```
 $ echo "2016-04-01 13:24:00,on,cool,25,auto" >> acstate.csv
 $ touch acstate_log.csv
+$ echo "2016-04-01 15:30:00,undo,0" >> reserve_state.csv
+$ touch reserve_state_log.csv
 ```
 
 #### fix `config.py` according to `lircd.conf`
@@ -63,11 +65,4 @@ set `CONTROLLER_NAME` and `context`
 ```
 class Config:
     CONTROLLER_NAME = '' # You have to set
-
-    context = {"csvFilePath": "acstate.csv",
-               "LogCsvFilePath": "acstate_log.csv"}
-
-    test_context = {"csvFilePath": "test_acstate.csv",
-                    "LogCsvFilePath": "test_acstate_log"}
-
 ```
