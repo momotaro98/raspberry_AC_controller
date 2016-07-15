@@ -9,8 +9,8 @@ class Config:
 
     test_context = {"acStateCSVFilePath": "test_acstate.csv",
                     "acStateLogCSVFilePath": "test_acstate_log.csv",
-                   "reserveStateCSVFilePath": "test_reserve_state.csv",
-                   "reserveStateLogCSVFilePath": "test_reserve_state_log.csv",
+                    "reserveStateCSVFilePath": "test_reserve_state.csv",
+                    "reserveStateLogCSVFilePath": "test_reserve_state_log.csv",
                     }
 
     @staticmethod

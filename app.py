@@ -1,10 +1,11 @@
 import os
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 
 from config import Config
-from model import ACState, ReserveState, ReserveOffTimeForm, ReserveOnTimeForm, UndoReservationForm
+from models import (ACState, ReserveState, ReserveOffTimeForm,
+                    ReserveOnTimeForm, UndoReservationForm)
 
 
 def create_app():
@@ -16,14 +17,16 @@ def create_app():
 
 app = create_app()
 
+
 @app.route('/')
 def index():
-    state = ACState(Config.context) # ステータスデータを読み込む
+    state = ACState(Config.context)  # ステータスデータを読み込む
 
     # 日本語変換
     jstate = state.convertToJapanese()
 
     return render_template('index.html', state=state, jstate=jstate)
+
 
 @app.route('/on')
 def turnOn():
@@ -42,6 +45,7 @@ def turnOn():
 
     return render_template('index.html', state=state, jstate=jstate)
 
+
 @app.route('/off')
 def turnOff():
     # ACStateインスタンス読み込み
@@ -59,6 +63,7 @@ def turnOff():
 
     return render_template('index.html', state=state, jstate=jstate)
 
+
 @app.route('/operating/<operatingMode>')
 def modeOperating(operatingMode):
     # ACStateインスタンス読み込み
@@ -75,6 +80,7 @@ def modeOperating(operatingMode):
     jstate = state.convertToJapanese()
 
     return render_template('index.html', state=state, jstate=jstate)
+
 
 @app.route('/temperature/<temperatureMode>')
 def modeTemperature(temperatureMode):
@@ -100,6 +106,7 @@ def modeTemperature(temperatureMode):
     jstate = state.convertToJapanese()
 
     return render_template('index.html', state=state, jstate=jstate)
+
 
 @app.route('/wind/<windMode>')
 def modeWind(windMode):
@@ -136,7 +143,8 @@ def reserve():
         if not state.sendSignalToAC():
             flash('信号を送信できませんでした')
         else:
-            offtext = "{h}時間{m}分後の切予約をしました".format(h=offForm.off_hour.data, m=offForm.off_minute.data)
+            offtext = "{h}時間{m}分後の切予約をしました".\
+                    format(h=offForm.off_hour.data, m=offForm.off_minute.data)
             flash(offtext)
         return redirect(url_for('reserve'))
 
@@ -149,7 +157,8 @@ def reserve():
         if not state.sendSignalToAC():
             flash('信号を送信できませんでした')
         else:
-            ontext = "{h}時間{m}分後の入予約をしました".format(h=onForm.on_hour.data, m=onForm.on_minute.data)
+            ontext = "{h}時間{m}分後の入予約をしました".\
+                    format(h=onForm.on_hour.data, m=onForm.on_minute.data)
             flash(ontext)
         return redirect(url_for('reserve'))
 
@@ -170,10 +179,10 @@ def reserve():
     timeout_text = state.makeTimeoutText()
 
     return render_template('reservation.html',
-                            timeout_text=timeout_text,
-                            offForm=offForm,
-                            onForm=onForm,
-                            undoForm=undoForm)
+                           timeout_text=timeout_text,
+                           offForm=offForm,
+                           onForm=onForm,
+                           undoForm=undoForm)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,11 @@
-#encoding: utf-8
+# encoding: utf-8
 
 import os
 import unittest
 
-from model import ACState
+from models import ACState
 from config import Config
+
 
 class ACStateTest(unittest.TestCase):
     def setUp(self):
@@ -22,7 +23,8 @@ class ACStateTest(unittest.TestCase):
 
     def test_initiate_and_getter(self):
         # test ACState initiation
-        self.assertEqual(self.acstate.__repr__(), '<2016-04-01 13:24:00 off cool 25 breeze>')
+        self.assertEqual(self.acstate.__repr__(),
+                         '<2016-04-01 13:24:00 off cool 25 breeze>')
 
     def test_makeSignalName(self):
         signal = self.acstate._makeSignalName()
