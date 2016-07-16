@@ -66,3 +66,11 @@ set `CONTROLLER_NAME` and `context`
 class Config:
     CONTROLLER_NAME = '' # You have to set
 ```
+
+
+
+## TEST
+
+```
+$ py.test
+```
