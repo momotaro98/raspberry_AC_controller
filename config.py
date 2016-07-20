@@ -2,10 +2,14 @@ class Config:
     APP_PATH = ''
     CONTROLLER_NAME = ''
 
-    context = {"acStateCSVFilePath": APP_PATH + "acstate.csv",
-               "acStateLogCSVFilePath": APP_PATH + "acstate_log.csv",
-               "reserveStateCSVFilePath": APP_PATH + "reserve_state.csv",
-               "reserveStateLogCSVFilePath": APP_PATH + "reserve_state_log.csv",
+    context = {"acStateCSVFilePath":
+               APP_PATH + "acstate.csv",
+               "acStateLogCSVFilePath":
+               APP_PATH + "acstate_log.csv",
+               "reserveStateCSVFilePath":
+               APP_PATH + "reserve_state.csv",
+               "reserveStateLogCSVFilePath":
+               APP_PATH + "reserve_state_log.csv",
                }
 
     test_context = {"acStateCSVFilePath": "test_acstate.csv",
