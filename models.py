@@ -6,6 +6,7 @@ from wtforms import SelectField, SubmitField
 
 from config import Config
 import utils
+import env_data
 
 # TODO: ReserveStateクラスを作っていくならば抽象クラスを設計する
 
@@ -126,22 +127,44 @@ class ACState:
         """
         method to write csv files
         """
+        # get environmental data if we have sensors
+        room_temperature = ""
+        room_humidity = ""
+        room_pressure = ""
+        try:
+            ed = env_data.EnvironData()
+            room_temperature = ed.get_temperature()
+            room_humidity = ed.get_humidity()
+            room_pressure = ed.get_pressure()
+        except:
+            pass
+
         timestamp = utils.nowTimeToString()
-        data_list = [timestamp,
-                     self._onoff,
-                     self._operating,
-                     self._temperature,
-                     self._wind]
+
+        state_data_list = [timestamp,
+                           self._onoff,
+                           self._operating,
+                           self._temperature,
+                           self._wind]
+
+        log_data_list = [timestamp,
+                         self._onoff,
+                         self._operating,
+                         self._temperature,
+                         self._wind,
+                         room_temperature,
+                         room_humidity,
+                         room_pressure]
 
         # write to 1 line csv file that has current A/C state
         with open(self._fileName, 'w') as f:
             writer = csv.writer(f, lineterminator='\n')
-            writer.writerow(data_list)
+            writer.writerow(state_data_list)
 
         # write to logs csv file
         with open(self._logFileName, 'a') as f:
             writer = csv.writer(f, lineterminator='\n')
-            writer.writerow(data_list)
+            writer.writerow(log_data_list)
 
     def sendSignalToAC(self):
         signal = self._makeSignalName()

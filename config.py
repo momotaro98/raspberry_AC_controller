@@ -1,6 +1,7 @@
 class Config:
     APP_PATH = ''
     CONTROLLER_NAME = ''
+    ENV_DATA_CMD = ''
 
     context = {"acStateCSVFilePath":
                APP_PATH + "acstate.csv",
