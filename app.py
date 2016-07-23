@@ -1,11 +1,12 @@
 import os
 
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 
 from config import Config
 from models import (ACState, ReserveState, ReserveOffTimeForm,
                     ReserveOnTimeForm, UndoReservationForm)
+from experiment import LogFileForExperiment
 
 
 def create_app():
@@ -43,6 +44,12 @@ def turnOn():
     # 日本語変換
     jstate = state.convertToJapanese()
 
+    # 実験用ログ書き込み
+    lffe = LogFileForExperiment(context=Config.context,
+                                acstate=state,
+                                ipaddr=request.remote_addr)
+    lffe.write_log_file()
+
     return render_template('index.html', state=state, jstate=jstate)
 
 
@@ -60,6 +67,12 @@ def turnOff():
 
     # 日本語変換
     jstate = state.convertToJapanese()
+
+    # 実験用ログ書き込み
+    lffe = LogFileForExperiment(context=Config.context,
+                                acstate=state,
+                                ipaddr=request.remote_addr)
+    lffe.write_log_file()
 
     return render_template('index.html', state=state, jstate=jstate)
 

@@ -1,6 +1,7 @@
 class Config:
     APP_PATH = ''
     CONTROLLER_NAME = ''
+    ENV_DATA_CMD = ''
 
     context = {"acStateCSVFilePath":
                APP_PATH + "acstate.csv",
@@ -10,12 +11,15 @@ class Config:
                APP_PATH + "reserve_state.csv",
                "reserveStateLogCSVFilePath":
                APP_PATH + "reserve_state_log.csv",
+               "experimentLogCSVFilePath":
+               APP_PATH + "experiment_log.csv",
                }
 
     test_context = {"acStateCSVFilePath": "test_acstate.csv",
                     "acStateLogCSVFilePath": "test_acstate_log.csv",
                     "reserveStateCSVFilePath": "test_reserve_state.csv",
                     "reserveStateLogCSVFilePath": "test_reserve_state_log.csv",
+                    "experimentLogCSVFilePath": "test_experiment_log.csv",
                     }
 
     @staticmethod
