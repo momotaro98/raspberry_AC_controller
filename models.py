@@ -152,9 +152,13 @@ class ACState:
         if self.onoff == "off":
             return "off"  # TODO: 赤外線信号対応テーブルを作って保守性を高くする
         elif self.onoff == "on":
-            return "{0}{1}{2}".format(self.operating,
-                                      self.temperature,
-                                      self.wind)
+            op = self.operating
+            if op == "dry" or op == "blast" or op == "auto":
+                return op
+            else:
+                return "{0}{1}{2}".format(self.operating,
+                                          self.temperature,
+                                          self.wind)
         else:
             return
 

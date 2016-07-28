@@ -24,7 +24,10 @@
         </div>
         <div class="col-xs-6">
             <div id="temperatureMode" class="state">
-                設定温度 {{ jstate.temperature }}℃
+                設定温度
+                {% if not (state.operating == "dry" or state.operating == "blast") %}
+                {{ jstate.temperature }}℃
+                {% endif %}
             </div>
         </div>
         <div class="col-xs-3">
@@ -69,6 +72,7 @@
     </div>
     -->
 </div>
+{% if not (state.operating == "blast" or state.operating == "dry") %}
 <div class="container">
     <div id="temperature">
         <a href="{{ url_for('modeTemperature', temperatureMode='up') }}">
@@ -80,6 +84,7 @@
         </a>
     </div>
 </div>
+{% endif %}
 <!--
 <div class="container">
     <div id="windButtons" class="row">
