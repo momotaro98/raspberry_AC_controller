@@ -92,6 +92,12 @@ def modeOperating(operatingMode):
     # 日本語変換
     jstate = state.convertToJapanese()
 
+    # 実験用ログ書き込み
+    lffe = LogFileForExperiment(context=Config.context,
+                                acstate=state,
+                                ipaddr=request.remote_addr)
+    lffe.write_log_file()
+
     return render_template('index.html', state=state, jstate=jstate)
 
 
@@ -118,6 +124,12 @@ def modeTemperature(temperatureMode):
     # 日本語変換
     jstate = state.convertToJapanese()
 
+    # 実験用ログ書き込み
+    lffe = LogFileForExperiment(context=Config.context,
+                                acstate=state,
+                                ipaddr=request.remote_addr)
+    lffe.write_log_file()
+
     return render_template('index.html', state=state, jstate=jstate)
 
 
@@ -135,6 +147,12 @@ def modeWind(windMode):
 
     # 日本語変換
     jstate = state.convertToJapanese()
+
+    # 実験用ログ書き込み
+    lffe = LogFileForExperiment(context=Config.context,
+                                acstate=state,
+                                ipaddr=request.remote_addr)
+    lffe.write_log_file()
 
     return render_template('index.html', state=state, jstate=jstate)
 
