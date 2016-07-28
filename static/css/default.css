@@ -58,12 +58,15 @@ a:hover {
     background: #00ff00;
     box-shadow: 0 6px 0 #00cc66;
 }
-#autoButton{
+#blastButton{
     color: #fff;
     background: #c0c0c0;
     box-shadow: 0 6px 0 #808080;
 }
 #autoButton{
+    color: #fff;
+    background: #F5DA81;
+    box-shadow: 0 6px 0 #FFBF00;
 }
 #temperature{
     margin: 20px 0px 20px 0px;

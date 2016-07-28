@@ -8,11 +8,14 @@
                 case 'warm':
                     $("body").css("background-color", "#F6CECE");
                     break
-                case 'auto':
-                    $("body").css("background-color", "#E6E6E6");
-                    break
                 case 'dry':
                     $("body").css("background-color", "#D8F6CE");
+                    break
+                case 'blast':
+                    $("body").css("background-color", "#F2F2F2");
+                    break
+                case 'auto':
+                    $("body").css("background-color", "#F5ECCE");
                     break
             }
         } else {
