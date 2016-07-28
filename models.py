@@ -12,7 +12,7 @@ import utils
 
 class ACState:
     ACState_DICT = {"onoff": ("on", "off"),
-                    "operating": ("cool", "warm", "dry", "auto"),
+                    "operating": ("cool", "warm", "dry", "auto", "blast"),
                     "wind": ("strong", "weak", "breeze", "auto")}
 
     def __init__(self, context):
@@ -160,7 +160,8 @@ class ACState:
 
     class _ACStateConvertedJapanese:
         OperDictionary = {"cool": "冷房", "warm": "暖房",
-                          "dry": "除湿", "auto": "自動"}
+                          "dry": "除湿", "auto": "自動",
+                          "blast": "送風"}
         WindDictionary = {"strong": "強風", "weak": "弱風",
                           "breeze": "微風", "auto": "自動"}
 

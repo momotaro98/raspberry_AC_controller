@@ -54,11 +54,20 @@
             </a>
         </div>
         <div class="col-xs-6">
+            <a href="{{ url_for('modeOperating', operatingMode='blast') }}">
+                <div class="Button" id="blastButton">送風</div>
+            </a>
+        </div>
+    </div>
+    <!--
+    <div class="row">
+        <div class="col-xs-6">
             <a href="{{ url_for('modeOperating', operatingMode='auto') }}">
                 <div class="Button" id="autoButton">自動</div>
             </a>
         </div>
     </div>
+    -->
 </div>
 <div class="container">
     <div id="temperature">
@@ -71,6 +80,7 @@
         </a>
     </div>
 </div>
+<!--
 <div class="container">
     <div id="windButtons" class="row">
         <div class="col-xs-6">
@@ -97,6 +107,7 @@
         </div>
     </div>
 </div>
+-->
 <div class="container">
     <div id="stop">
         <a href="{{ url_for('turnOff') }}">
