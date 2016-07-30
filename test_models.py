@@ -3,7 +3,7 @@
 import os
 import unittest
 
-from models import ACState
+from models import ACState, ReserveState
 from config import Config
 
 
@@ -69,6 +69,35 @@ class ACStateTest(unittest.TestCase):
         # setter制限が働いているか確認
         self.acstate.wind = "week"
         self.assertEqual(self.acstate.wind, "strong")
+
+
+class ReserveStateTest(unittest.TestCase):
+    def setUp(self):
+        with open(Config.test_context["reserveStateCSVFilePath"], "w") as f:
+            f.write("2016-04-01 13:24:00,undo,0")
+
+        with open(Config.test_context["reserveStateLogCSVFilePath"], "w") as f:
+            f.write("2016-04-01 13:24:00,undo,0")
+
+        self.rstate = ReserveState(Config.test_context)
+
+    def tearDown(self):
+        os.remove(Config.test_context["reserveStateCSVFilePath"])
+        os.remove(Config.test_context["reserveStateLogCSVFilePath"])
+
+    def test_initiate_and_getter(self):
+        # test ReserveState initiation
+        self.assertEqual(self.rstate.__repr__(),
+                         '<2016-04-01 13:24:00 undo 0>')
+
+    def test_makeSignalName(self):
+        signal = self.rstate._makeSignalName()
+        self.assertEqual(signal, 'undo')
+
+        self.rstate.onoff = "off"
+        self.rstate.settime = 120
+        signal = self.rstate._makeSignalName()
+        self.assertEqual(signal, 'off02')
 
 if __name__ == "__main__":
     unittest.main()

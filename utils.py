@@ -17,6 +17,15 @@ def strToDatetime(tstr):
     return datetime.strptime(tstr, DT_FORMAT)
 
 
+def hourToMin(h):
+    """
+    >>> hourToMin(3)
+    180
+    """
+    h = int(h)
+    return 60 * h
+
+
 def hourminToMin(h, m):
     """
     >>> hourminToMin(2, 30)
@@ -24,6 +33,16 @@ def hourminToMin(h, m):
     """
     h, m = int(h), int(m)
     return 60*h + m
+
+
+def minToHour(m):
+    """
+    >>> minToHour(240)
+    4
+    >>> minToHour(150)
+    2
+    """
+    return m // 60
 
 
 def minToHourMin(m):

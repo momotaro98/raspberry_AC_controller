@@ -174,8 +174,8 @@ def reserve():
         if not state.sendSignalToAC():
             flash('信号を送信できませんでした')
         else:
-            offtext = "{h}時間{m}分後の切予約をしました".\
-                    format(h=offForm.off_hour.data, m=offForm.off_minute.data)
+            offtext = "{h}時間後の切予約をしました".\
+                    format(h=offForm.off_hour.data)
             flash(offtext)
         return redirect(url_for('reserve'))
 
@@ -188,8 +188,8 @@ def reserve():
         if not state.sendSignalToAC():
             flash('信号を送信できませんでした')
         else:
-            ontext = "{h}時間{m}分後の入予約をしました".\
-                    format(h=onForm.on_hour.data, m=onForm.on_minute.data)
+            ontext = "{h}時間後の入予約をしました".\
+                    format(h=onForm.on_hour.data)
             flash(ontext)
         return redirect(url_for('reserve'))
 

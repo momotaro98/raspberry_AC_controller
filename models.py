@@ -7,8 +7,6 @@ from wtforms import SelectField, SubmitField
 from config import Config
 import utils
 
-# TODO: ReserveStateクラスを作っていくならば抽象クラスを設計する
-
 
 class ACState:
     ACState_DICT = {"onoff": ("on", "off"),
@@ -278,8 +276,14 @@ class ReserveState:
         if self.onoff == "undo":
             return "undo"  # TODO: 赤外線信号対応テーブルを作って保守性を高くする
         elif self.onoff == "on" or self.onoff == "off":
-            h, m = utils.minToHourMin(self.settime)
-            return "{0}{1:0>2}{2:0>2}".format(self.onoff, h, m)
+            '''
+            信号名
+            例
+            on02
+            off03
+            '''
+            h = utils.minToHour(self.settime)
+            return "{0}{1:0>2}".format(self.onoff, h)
         else:
             return
 
@@ -305,9 +309,7 @@ class ReserveForm(Form):
 
 class ReserveOffTimeForm(ReserveForm):
     off_hour = SelectField('時間', choices=[
-        (str(i), str(i)) for i in range(0, 13)])  # 最大12時間
-    off_minute = SelectField('分', choices=[
-        (str(0), str(0)), (str(30), str(30))])
+        (str(i), str(i)) for i in range(1, 13)])  # 最大12時間
     submit = SubmitField('送信')
 
     def change_ReserveState(self, rstate):
@@ -315,15 +317,12 @@ class ReserveOffTimeForm(ReserveForm):
         rstate.onoff = "off"
 
         # 設定時間をセットする
-        rstate.settime = utils.hourminToMin(self.off_hour.data,
-                                            self.off_minute.data)
+        rstate.settime = utils.hourToMin(self.off_hour.data)
 
 
 class ReserveOnTimeForm(ReserveForm):
     on_hour = SelectField('時間', choices=[
-        (str(i), str(i)) for i in range(0, 13)])  # 最大12時間
-    on_minute = SelectField('分', choices=[
-        (str(0), str(0)), (str(30), str(30))])
+        (str(i), str(i)) for i in range(1, 13)])  # 最大12時間
     submit = SubmitField('送信')
 
     def change_ReserveState(self, rstate):
@@ -331,8 +330,7 @@ class ReserveOnTimeForm(ReserveForm):
         rstate.onoff = "on"
 
         # 設定時間をセットする
-        rstate.settime = utils.hourminToMin(self.on_hour.data,
-                                            self.on_minute.data)
+        rstate.settime = utils.hourToMin(self.on_hour.data)
 
 
 class UndoReservationForm(ReserveForm):
