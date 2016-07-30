@@ -74,10 +74,10 @@ class ACStateTest(unittest.TestCase):
 class ReserveStateTest(unittest.TestCase):
     def setUp(self):
         with open(Config.test_context["reserveStateCSVFilePath"], "w") as f:
-            f.write("2016-04-01 13:24:00,undo,0")
+            f.write("2016-04-01 13:24:00,offundo,0")
 
         with open(Config.test_context["reserveStateLogCSVFilePath"], "w") as f:
-            f.write("2016-04-01 13:24:00,undo,0")
+            f.write("2016-04-01 13:24:00,offundo,0")
 
         self.rstate = ReserveState(Config.test_context)
 
@@ -88,16 +88,26 @@ class ReserveStateTest(unittest.TestCase):
     def test_initiate_and_getter(self):
         # test ReserveState initiation
         self.assertEqual(self.rstate.__repr__(),
-                         '<2016-04-01 13:24:00 undo 0>')
+                         '<2016-04-01 13:24:00 offundo 0>')
 
     def test_makeSignalName(self):
         signal = self.rstate._makeSignalName()
-        self.assertEqual(signal, 'undo')
+        self.assertEqual(signal, 'offundo')
 
         self.rstate.onoff = "off"
         self.rstate.settime = 120
         signal = self.rstate._makeSignalName()
         self.assertEqual(signal, 'off02')
+
+        self.rstate.onoff = "on"
+        self.rstate.settime = 180
+        signal = self.rstate._makeSignalName()
+        self.assertEqual(signal, 'on03')
+
+        self.rstate.onoff = "onundo"
+        self.rstate.settime = 0
+        signal = self.rstate._makeSignalName()
+        self.assertEqual(signal, 'onundo')
 
 if __name__ == "__main__":
     unittest.main()

@@ -181,7 +181,7 @@ class ACState:
 
 
 class ReserveState:
-    ReserveState_DICT = {"onoff": ("on", "off", "undo")}
+    ReserveState_DICT = {"onoff": ("on", "off", "offundo", "onundo")}
 
     def __init__(self, context):
         self._logFileName = context["reserveStateLogCSVFilePath"]
@@ -273,8 +273,9 @@ class ReserveState:
             return InfraredSignal.sendSignal(signal)
 
     def _makeSignalName(self):
-        if self.onoff == "undo":
-            return "undo"  # TODO: 赤外線信号対応テーブルを作って保守性を高くする
+        if self.onoff == "onundo" or self.onoff == "offundo":
+            return self.onoff
+            # TODO: 赤外線信号対応テーブルを作って保守性を高くする
         elif self.onoff == "on" or self.onoff == "off":
             '''
             信号名
@@ -338,7 +339,10 @@ class UndoReservationForm(ReserveForm):
 
     def change_ReserveState(self, rstate):
         # onoff変更
-        rstate.onoff = "undo"
+        if rstate.onoff == "off":
+            rstate.onoff = "offundo"
+        elif rstate.onoff == "on":
+            rstate.onoff = "onundo"
 
         # 設定時間をセットする
         rstate.settime = 0  # UNDOの場合は0
